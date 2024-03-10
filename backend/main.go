@@ -24,6 +24,7 @@ func init() {
     if err != nil {
         panic("Could not open database file\n")
     }
+    shared.DB.AutoMigrate(&user.User{})
 
     if os.Getenv("JWT_SECRET") != "" {
         shared.JwtSecret = []byte(os.Getenv("JWT_SECRET"))
@@ -36,8 +37,8 @@ func main() {
     {
         userGroup.POST("/login", user.UserLogin)
         userGroup.POST("/signup", user.UserSignup)
-        userGroup.GET("")
-        userGroup.PATCH("")
+        userGroup.GET("", user.AuthorizeMiddleware)
+        userGroup.PATCH("", user.AuthorizeMiddleware)
     }
 
     r.Run(":6969")
