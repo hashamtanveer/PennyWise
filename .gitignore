@@ -1,2 +1,3 @@
 backend/go.sum
 backend/.db
+node_modules
