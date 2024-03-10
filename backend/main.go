@@ -24,7 +24,7 @@ func init() {
     if err != nil {
         panic("Could not open database file\n")
     }
-    shared.DB.AutoMigrate(&user.User{})
+    shared.DB.AutoMigrate(&user.User{}, &user.Transaction{})
 
     if os.Getenv("JWT_SECRET") != "" {
         shared.JwtSecret = []byte(os.Getenv("JWT_SECRET"))
@@ -43,11 +43,11 @@ func main() {
 
     transactionsGroup := r.Group("/transactions")
     {
-        transactionsGroup.GET("", user.AuthorizeMiddleware)
-        transactionsGroup.POST("", user.AuthorizeMiddleware)
+        transactionsGroup.GET("", user.AuthorizeMiddleware, user.GetTransactions)
+        transactionsGroup.POST("", user.AuthorizeMiddleware, user.PostTransaction)
         transactionsGroup.GET("/:id", user.AuthorizeMiddleware)
-        transactionsGroup.PATCH("/:id", user.AuthorizeMiddleware)
-        transactionsGroup.DELETE("/:id", user.AuthorizeMiddleware)
+        transactionsGroup.PATCH("/:id", user.AuthorizeMiddleware, user.PatchTransaction)
+        transactionsGroup.DELETE("/:id", user.AuthorizeMiddleware, user.DeleteTransaction)
     }
 
     r.Run(":6969")

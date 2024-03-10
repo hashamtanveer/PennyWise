@@ -64,7 +64,7 @@ func UserSignup(c *gin.Context) {
 	c.String(http.StatusOK, "OK")
 }
 
-func genToken(userID uint) (string, error) {
+func genToken(userID int) (string, error) {
 	timeNow := time.Now()
 	timeExpire := timeNow.Add(time.Hour * 24)
 
