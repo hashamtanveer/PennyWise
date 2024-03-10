@@ -37,8 +37,17 @@ func main() {
     {
         userGroup.POST("/login", user.UserLogin)
         userGroup.POST("/signup", user.UserSignup)
-        userGroup.GET("", user.AuthorizeMiddleware)
-        userGroup.PATCH("", user.AuthorizeMiddleware)
+        //userGroup.GET("", user.AuthorizeMiddleware)
+        //userGroup.PATCH("", user.AuthorizeMiddleware)
+    }
+
+    transactionsGroup := r.Group("/transactions")
+    {
+        transactionsGroup.GET("", user.AuthorizeMiddleware)
+        transactionsGroup.POST("", user.AuthorizeMiddleware)
+        transactionsGroup.GET("/:id", user.AuthorizeMiddleware)
+        transactionsGroup.PATCH("/:id", user.AuthorizeMiddleware)
+        transactionsGroup.DELETE("/:id", user.AuthorizeMiddleware)
     }
 
     r.Run(":6969")
