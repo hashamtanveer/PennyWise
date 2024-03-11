@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { Avatar, Button, Form, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -6,12 +7,38 @@ import { useNavigate } from 'react-router-dom';
 const ExpenseForm = () => {
 	let navigate = useNavigate();
 
+    // If user not logged in, kick them back to login
+    useEffect(() => {
+        const token = localStorage.getItem("user_token");
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/transactions`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => {
+            if (!res.ok && res.status === 401)
+                navigateToLogin();
+        })
+    }, [])
+
 	const onFinish = (values) => {
-		console.log('Success:', values);
-	};
+        const token = localStorage.getItem("user_token");
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/transactions`, {
+            method: "POST",
+            headers: {
+                'Content-Type': "application/json",
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ amount: parseInt(values.amount), category: values.category, description: values.description, date: (new Date()).toISOString() })
+        });
+    };
 	const onFinishFailed = (errorInfo) => {
 		console.log('Failed:', errorInfo);
 	};
+
+    const navigateToLogin = () => {
+        navigate("/login");
+    }
 
 	const navigateToDashboard = () => {
 		navigate('/dashboard');
@@ -61,7 +88,7 @@ const ExpenseForm = () => {
 							<Input size="large" />
 						</Form.Item>
 
-						<Form.Item label="Category" name="category">
+						<Form.Item label="Category" name="stuff">
 							<Input size="large" />
 						</Form.Item>
 

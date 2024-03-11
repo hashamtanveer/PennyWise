@@ -1,14 +1,54 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Table, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
 const Dashboard = () => {
 	let navigate = useNavigate();
+    const [transactions, setTransactions] = useState([]);
+
+    useEffect(() => {
+        const token = localStorage.getItem("user_token");
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/transactions`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => {
+            if (!res.ok) {
+                if (res.status == 401)
+                    navigateToLogin();
+                return
+            }
+            res.json().then(data => {
+                let balance = 0;
+                for (let i = 0; i < data.length; i++) {
+                    balance += data[i].amount ? data[i].amount : 0;
+                    data[i].key = i;
+                    data[i].balance = balance;
+                    const date = new Date(data[i].date);
+                    data[i].date = `${months[date.getMonth() - 1]} ${date.getDay()}`
+                }
+
+                setTransactions(data);
+            }).catch(err => {
+                console.log("json", err);
+            })
+        }).catch(err => {
+            console.log("fetch", err);
+        })
+    }, [])
 
 	const navigateToForm = () => {
 		navigate('/form');
 	  };
+
+    const navigateToLogin = () => {
+        navigate('/login');
+    };
 	const columns = [
 		{
 			title: 'Date',
@@ -42,33 +82,6 @@ const Dashboard = () => {
 		},
 	];
 
-	const data = [
-		{
-			key: '1',
-			date: 'Jan 1',
-			description: 'Monthly Rent',
-			category: 'Rent',
-			amount: '$1000.00',
-			balance: '$12,000.00',
-		},
-		{
-			key: '2',
-			date: 'Jan 1',
-			description: 'Monthly Rent',
-			category: 'Rent',
-			amount: '$1000.00',
-			balance: '$12,000.00',
-		},
-		{
-			key: '3',
-			date: 'Jan 1',
-			description: 'Monthly Rent',
-			category: 'Rent',
-			amount: '$1000.00',
-			balance: '$12,000.00',
-		},
-	];
-
 	return (
 		<div className="h-screen flex flex-col justify-center items-center">
 			{/* Header */}
@@ -97,7 +110,7 @@ const Dashboard = () => {
 				</div>
 
 				<div className="mt-6">
-					<Table columns={columns} dataSource={data} />
+					<Table columns={columns} dataSource={transactions} />
 				</div>
 			</div>
 		</div>
