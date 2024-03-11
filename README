@@ -1,0 +1,31 @@
+# Drexel University - WI2024
+# CS530 - PennyWise
+
+Backend:
+    TechStack:
+    - Go 1.22
+    - gorm.io/gorm
+    - go-gorm/sqlite
+    - gin-gonic/gin
+    - bytedance/sonic
+    Run:
+        steps:
+        - cd backend
+        - go run main.go
+        notes:
+        - the application serve an http server on port 6900
+    Compile:
+    - cd backend
+    - go mod download
+    - go build main.go -o <name_of_binary>
+
+Frontend:
+    TechStack:
+    - React
+    - Tailwind CSS
+    Run:
+    - yarn (or npm install)
+    - yarn start (or npm run start)
+    Compile:
+    - yarn (or npm install)
+    - yarn build (or npm run build)
