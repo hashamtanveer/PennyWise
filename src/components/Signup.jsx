@@ -13,6 +13,8 @@ const Signup = () => {
             method: "POST",
             body: JSON.stringify({ username: values.email, password: values.password })
         }).then(res => {
+            if (res.status === 200)
+                navigateToLogin();
             console.log(res.json());
         }). catch(err => console.log(err))
     };
