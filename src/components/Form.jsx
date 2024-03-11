@@ -30,7 +30,7 @@ const ExpenseForm = () => {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ amount: parseInt(values.amount), category: values.category, description: values.description, date: (values.date === undefined ? new Date(Date.now()) : new Date(values.date)).toISOString() })
-        });
+        }).finally(() => {navigateToDashboard()});
     };
 	const onFinishFailed = (errorInfo) => {
 		console.log('Failed:', errorInfo);
