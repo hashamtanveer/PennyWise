@@ -62,7 +62,7 @@ const LoginForm = () => {
                         </Form.Item>
 
                         <Form.Item label="Password" name="password">
-                            <Input size="large" />
+                            <Input size="large" type="password"/>
                         </Form.Item>
 
                         <Form.Item className="w-full flex justify-end">
