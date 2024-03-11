@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { Avatar, Button, Form, Input } from 'antd';
+import { Avatar, Button, DatePicker, Form, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ const ExpenseForm = () => {
                 'Content-Type': "application/json",
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ amount: parseInt(values.amount), category: values.category, description: values.description, date: (new Date()).toISOString() })
+            body: JSON.stringify({ amount: parseInt(values.amount), category: values.category, description: values.description, date: (values.date === undefined ? new Date(Date.now()) : new Date(values.date)).toISOString() })
         });
     };
 	const onFinishFailed = (errorInfo) => {
@@ -88,8 +88,8 @@ const ExpenseForm = () => {
 							<Input size="large" />
 						</Form.Item>
 
-						<Form.Item label="Category" name="stuff">
-							<Input size="large" />
+						<Form.Item label="Date" name="date">
+							<DatePicker />
 						</Form.Item>
 
 						<Form.Item className="w-full flex justify-end">

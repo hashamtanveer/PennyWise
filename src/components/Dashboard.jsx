@@ -104,9 +104,9 @@ const Dashboard = () => {
 					Dashboard
 				</div>
 
-				<div className="text-2xl font-semibold mt-6">
-					Recent Transactions
-					<Button onClick={navigateToForm} className='ml-[800px]'>Add New Expense</Button>
+				<div className="text-2xl font-semibold mt-6 flex flex-row justify-between">
+					<h2>Recent Transactions</h2>
+					<Button onClick={navigateToForm} className=''>Add New Expense</Button>
 				</div>
 
 				<div className="mt-6">
