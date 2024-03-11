@@ -49,6 +49,10 @@ const Dashboard = () => {
     const navigateToLogin = () => {
         navigate('/login');
     };
+
+    const removeTransaction = (id) => {
+        setTransactions(transactions.filter((transaction) => transaction.id != id))
+    }
 	const columns = [
 		{
 			title: 'Date',
@@ -80,6 +84,22 @@ const Dashboard = () => {
 			key: 'balance',
 			dataIndex: 'balance',
 		},
+        {
+            title: 'Action',
+            dataIndex: 'id',
+            render: (id) => (<Button onClick={() => {
+                const token = localStorage.getItem("user_token");
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/transactions/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    method: 'DELETE'
+                }).then((res) => {
+                    if (res.ok)
+                        removeTransaction(id);
+                })
+            }} title="delete this item">X</Button>)
+        }
 	];
 
 	return (
